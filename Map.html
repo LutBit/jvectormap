@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="jquery-jvectormap.css" type="text/css" media="screen"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="jquery.jvectormap.min.js"></script>
+  <script src="jquery-jvectormap-world-mill.js"></script>
+</head>
+<body>
+<p>So far, I've visited <span id="num-countries">X</span> countries on  <span id="num-continents">X</span> continents: </p>
+<script src="countries.js"></script>
+<div id="world-map" style="height: 400px"></div>
+<script>
+  $(function(){
+    let regions = [];
+    let numContinents = 0;
+    let numCountries = 0;
+    for (const [continent, countries] of Object.entries(countriesVisited)) {
+      ++numContinents;
+      // Highlight all countries of this continent on the map.
+      const countryColors = {};
+      for (const c of countries) countryColors[c] = 1;
+      regions.push({
+        values: countryColors,
+        scale: ["#ff00ff", continentColors[continent]],
+        normalizeFunction: 'polynomial',
+      });
+      for (const countryCode of countries) {
+        ++numCountries;}
+    }
+    document.getElementById("num-countries").innerHTML = numCountries;
+    document.getElementById("num-continents").innerHTML = numContinents;
+  $('#world-map').vectorMap({
+    map: 'world_mill',
+    backgroundColor: 'white',
+    zoomMax: 6,
+    regionStyle: {
+      initial: {
+        fill: '#aaa',
+        "fill-opacity": 0.9,
+        stroke: 'none',
+        "stroke-width": 0,
+        "stroke-opacity": 1
+      },
+      hover: {
+        "fill-opacity": 1.0,
+      },
+    },
+    series: {
+      regions: regions,
+    },
+  });
+  });
+</script>
+</body>
+</html>
